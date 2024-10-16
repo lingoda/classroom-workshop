@@ -15,7 +15,7 @@ export function subscribeToSocket({
   if (socketService && connected) {
     console.log("Already connected to WebSocket");
 
-    return Promise.reject();
+    return Promise.resolve();
   }
 
   if (socketService && !connected) {

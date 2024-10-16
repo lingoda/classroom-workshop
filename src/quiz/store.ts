@@ -11,11 +11,13 @@ interface QuestionState {
 }
 
 interface QuizState {
-  currentQuestion: QuestionState | null;
+  questions: QuestionState[];
+  currentQuestionIndex: number;
 }
 
 const defaultState: QuizState = {
-  currentQuestion: null,
+  questions: [],
+  currentQuestionIndex: -1,
 };
 
 interface QuizStore extends QuizState {
@@ -24,9 +26,9 @@ interface QuizStore extends QuizState {
     answers: string[],
     correctAnswer?: string
   ) => void;
-  joinQuestionParticipant: (user: string) => void;
-  saveSubmittedAnswer: (user: string, answer: string) => void;
-  saveCorrectAnswer: (answer: string) => void;
+  joinQuestionParticipant: (question: string, user: string) => void;
+  saveSubmittedAnswer: (question: string, user: string, answer: string) => void;
+  saveCorrectAnswer: (question: string, answer: string) => void;
 }
 
 export const useQuizStore = create(
@@ -38,83 +40,82 @@ export const useQuizStore = create(
           (state) => {
             return {
               ...state,
-              currentQuestion: {
+              currentQuestionIndex: state.currentQuestionIndex + 1,
+              questions: state.questions.concat({
                 question,
                 answerOptions: answers,
                 correctAnswer: correctAnswer || null,
                 status: "active",
                 participants: [],
-              },
+              }),
             };
           },
           false,
           "quiz/saveNewQuestion"
         );
       },
-      joinQuestionParticipant: (user) => {
+      joinQuestionParticipant: (question, user) => {
         return set(
           (state) => {
-            if (!state.currentQuestion) {
-              return state;
-            }
-
             return {
               ...state,
-              currentQuestion: {
-                ...state.currentQuestion,
-                participants: [
-                  ...state.currentQuestion.participants,
-                  { user, submittedAnswer: null },
-                ],
-              },
+              questions: state.questions.map((currentQuestion) => {
+                if (currentQuestion.question !== question)
+                  return currentQuestion;
+
+                return {
+                  ...currentQuestion,
+                  participants: [
+                    ...currentQuestion.participants,
+                    { user, submittedAnswer: null },
+                  ],
+                };
+              }),
             };
           },
           false,
           "quiz/joinQuestionParticipant"
         );
       },
-      saveSubmittedAnswer: (user, answer) => {
+      saveSubmittedAnswer: (question, user, answer) => {
         return set((state) => {
-          if (!state.currentQuestion) {
-            return state;
-          }
-
-          const updatedParticipants = state.currentQuestion.participants.map(
-            (participant) => {
-              if (participant.user === user) {
-                return {
-                  ...participant,
-                  submittedAnswer: answer,
-                };
-              }
-
-              return participant;
-            }
-          );
-
           return {
             ...state,
-            currentQuestion: {
-              ...state.currentQuestion,
-              participants: updatedParticipants,
-            },
+            questions: state.questions.map((currentQuestion) => {
+              if (currentQuestion.question !== question) return currentQuestion;
+
+              return {
+                ...currentQuestion,
+                participants: currentQuestion.participants.map(
+                  (participant) => {
+                    if (participant.user !== user) return participant;
+
+                    return {
+                      ...participant,
+                      submittedAnswer: answer,
+                    };
+                  }
+                ),
+              };
+            }),
           };
         });
       },
-      saveCorrectAnswer: (answer) => {
+      saveCorrectAnswer: (question, answer) => {
         return set(
           (state) => {
-            if (!state.currentQuestion) {
-              return state;
-            }
-
             return {
               ...state,
-              currentQuestion: {
-                ...state.currentQuestion,
-                correctAnswer: answer,
-                status: "completed",
-              },
+              questions: state.questions.map((currentQuestion) => {
+                if (currentQuestion.question !== question)
+                  return currentQuestion;
+
+                return {
+                  ...currentQuestion,
+                  correctAnswer: answer,
+                  status: "completed",
+                };
+              }),
             };
           },
           false,
@@ -135,5 +136,6 @@ export const {
 } = useQuizStore.getState();
 
 // Selectors:
-export const currentQuestionSelector = (state: QuizState) =>
-  state.currentQuestion;
+export const currentQuestionSelector = (
+  state: QuizState
+): QuestionState | undefined => state.questions[state.currentQuestionIndex];

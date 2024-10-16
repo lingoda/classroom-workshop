@@ -36,7 +36,7 @@ function subscribeJoinQuestionEvent() {
   return subscribeToSocket({
     callback: (message) => {
       if (!assertJoinQuestionEvent(message)) return;
-      joinQuestionParticipant(message.payload.user);
+      joinQuestionParticipant(message.payload.question, message.payload.user);
     },
   });
 }
@@ -52,7 +52,11 @@ function subscribeAnswerQuestionEvent() {
   return subscribeToSocket({
     callback: (message) => {
       if (!assertAnswerQuestionEvent(message)) return;
-      saveSubmittedAnswer(message.payload.user, message.payload.answer);
+      saveSubmittedAnswer(
+        message.payload.question,
+        message.payload.user,
+        message.payload.answer
+      );
     },
   });
 }
@@ -70,7 +74,7 @@ function subscribeCorrectAnswerEvent() {
   return subscribeToSocket({
     callback: (message) => {
       if (!assertCorrectAnswerEvent(message)) return;
-      saveCorrectAnswer(message.payload.answer);
+      saveCorrectAnswer(message.payload.question, message.payload.answer);
     },
   });
 }
