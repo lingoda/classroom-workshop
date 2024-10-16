@@ -24,7 +24,7 @@ export default function Home() {
         <Link href="/about" color="secondary">
           Go to the about page
         </Link>
-        Smacznej herbatki, je*ać podatki ~Abraham Lincoln
+        Smacznej herbatki, je*ać podatki ~Abraham Lincoln, 2023
         <ProTip />
         <Copyright />
       </Box>
