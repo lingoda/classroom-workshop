@@ -1,14 +1,14 @@
 import { Button } from '@mui/material';
 import { Box } from '@mui/material';
 import { useState, useRef, useEffect } from 'react';
+import { ImagePage } from './types';
 
 interface Props {
     updatePageContent: (content: string) => void;
-    pageContent: string | null;
+    pageContent: ImagePage['content'];
 }
 
 export const ImageContent = ({updatePageContent, pageContent}: Props) => {
-  console.log('pageContent', pageContent);
   const [selectedImage, setSelectedImage] = useState<string | null>(pageContent);
   const fileInputRef = useRef<HTMLInputElement>(null);
 

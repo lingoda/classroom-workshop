@@ -19,7 +19,6 @@ const Editor = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const theme = useTheme();
   const currentPageData = pages[currentPage - 1];
-console.dir(pages);
 
   const sidebarItems: { text: Page['type']; icon: JSX.Element; disabled: boolean }[] = [
     { text: 'Image', icon: <ImageIcon />, disabled: false },
