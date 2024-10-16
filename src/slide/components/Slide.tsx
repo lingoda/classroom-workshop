@@ -23,7 +23,7 @@ export const Slide = ({ slideIndex, isTeacher }: Props) => {
           isTeacher={isTeacher}
           slideIndex={slideIndex}
           imageUrl={slide.payload.imageUrl.src}
-          teacherHint={slide.payload.teacherHint}
+          teacherHint={isTeacher ? slide.payload.teacherHint : undefined}
         />
       );
 
