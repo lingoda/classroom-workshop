@@ -1,5 +1,11 @@
+import { Presentation } from '../src/Presentation';
+
 export const Student = () => {
-  return <div>Student</div>;
+  return (
+    <>
+      <Presentation />
+    </>
+  );
 };
 
 export default Student;

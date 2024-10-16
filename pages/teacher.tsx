@@ -1,5 +1,11 @@
+import { Presentation } from '../src/Presentation';
+
 export const Teacher = () => {
-  return <div>Teacher</div>;
+  return (
+    <>
+      <Presentation isTeacher />
+    </>
+  );
 };
 
 export default Teacher;
