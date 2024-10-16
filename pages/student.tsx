@@ -3,7 +3,7 @@ import { ImageSlide } from '../src/ImageSlide';
 export const Student = () => {
   return (
     <>
-      <ImageSlide />
+      <ImageSlide slideIndex={1} imageUrl="/presentation/student/img_2.png" />
     </>
   );
 };
