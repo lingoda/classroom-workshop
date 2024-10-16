@@ -10,10 +10,7 @@ export interface VideoPage {
 
 export interface QuizPage {
   type: 'Quiz';
-  content: {
-    question: string;
-    options: string[];
-  } | null;
+  content: null;
 }
 
 export interface PollPage {

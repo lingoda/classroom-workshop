@@ -1,5 +1,9 @@
 import { Slide, SlideNavigation } from "../src/slide/components";
 import {
+  initTeacherQuizClient,
+  QuizTeacherLayer,
+} from "../src/quiz";
+import {
   subscribeChangeSlideEvent,
   useSlideNavigation,
 } from "../src/slide/hooks";

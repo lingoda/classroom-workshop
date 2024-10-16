@@ -53,5 +53,7 @@ export function subscribeToSocket({
 }
 
 export function sendMessage(message: string) {
-  socketService.send(message);
+  if (socketService) {
+    socketService.send(message);
+  }
 }

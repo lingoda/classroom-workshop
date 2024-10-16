@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-interface QuestionState {
+export interface QuestionState {
   question: string;
   answerOptions: string[];
   correctAnswer: string | null;
@@ -150,7 +150,10 @@ export const {
 // Selectors:
 export const currentQuestionSelector = (
   state: QuizState
-): QuestionState | undefined => state.questions[state.currentQuestionIndex];
+): QuestionState | undefined => {
+  console.log('state', state);
+  return state.questions[state.currentQuestionIndex]
+};
 
 export const currentQuestionIndexSelector = (state: QuizState) =>
   state.currentQuestionIndex;
