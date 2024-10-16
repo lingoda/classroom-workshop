@@ -1,9 +1,9 @@
-import { Presentation } from '../src/Presentation';
+import { ImageSlide } from '../src/ImageSlide';
 
 export const Teacher = () => {
   return (
     <>
-      <Presentation isTeacher />
+      <ImageSlide isTeacher />
     </>
   );
 };
