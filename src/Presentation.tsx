@@ -1,7 +1,7 @@
 import { Button, Stack } from '@mui/material';
 import { Create, TextFields } from '@mui/icons-material';
 import { useSyncDemo } from '@tldraw/sync';
-import { Tldraw, track, useEditor } from 'tldraw';
+import { DefaultColorStyle, Tldraw, track, useEditor } from 'tldraw';
 import 'tldraw/tldraw.css';
 
 interface PresentationProps {
@@ -22,19 +22,19 @@ export const Presentation = ({ isTeacher = false }: PresentationProps) => {
             zIndex: 1000,
           }}
         >
-          <PresentationToolbar />
+          <PresentationToolbar isTeacher={isTeacher} />
         </div>
       </Tldraw>
     </div>
   );
 };
 
-const PresentationToolbar = track(() => {
-  const editor = useEditor();
+interface PresentationToolbarProps {
+  isTeacher: boolean;
+}
 
-  const handleToolChange = (tool: string) => {
-    editor.setCurrentTool(tool);
-  };
+const PresentationToolbar = track(({ isTeacher }: PresentationToolbarProps) => {
+  const editor = useEditor();
 
   return (
     <Stack
@@ -47,14 +47,20 @@ const PresentationToolbar = track(() => {
     >
       <Button
         variant="contained"
-        onClick={() => handleToolChange('draw')}
+        onClick={() => {
+          editor.setStyleForNextShapes(
+            DefaultColorStyle,
+            isTeacher ? 'red' : 'blue'
+          );
+          editor.setCurrentTool('draw');
+        }}
         startIcon={<Create />}
       >
         Annotation
       </Button>
       <Button
         variant="contained"
-        onClick={() => handleToolChange('text')}
+        onClick={() => editor.setCurrentTool('text')}
         startIcon={<TextFields />}
       >
         Text
