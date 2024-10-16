@@ -3,18 +3,30 @@ import { AssetRecordType, Editor, Tldraw } from 'tldraw';
 import 'tldraw/tldraw.css';
 import { useCallback } from 'react';
 import { ImageSlideToolbar } from './ImageSlideToolbar';
+import { Box } from '@mui/material';
+import { ImageSlideHint } from './ImageSlideHint';
 
 interface ImageSlideProps {
   isTeacher?: boolean;
+  slideIndex: number;
+  imageUrl: string;
+  teacherHint?: string;
 }
 
-export const ImageSlide = ({ isTeacher = false }: ImageSlideProps) => {
-  const store = useSyncDemo({ roomId: 'classroom-workshop-room-1' });
+export const ImageSlide = ({
+  isTeacher = false,
+  slideIndex,
+  imageUrl,
+  teacherHint,
+}: ImageSlideProps) => {
+  const store = useSyncDemo({
+    roomId: `classroom-workshop-room-new-${slideIndex}`,
+  });
 
   const handleMount = useCallback((editor: Editor) => {
     const existingAsset = editor
       .getAssets()
-      .find((asset) => asset.props.src === '/presentation/student/img_1.png');
+      .find((asset) => asset.props.src === imageUrl);
 
     if (!existingAsset) {
       const assetId = AssetRecordType.createId();
@@ -31,7 +43,7 @@ export const ImageSlide = ({ isTeacher = false }: ImageSlideProps) => {
           typeName: 'asset',
           props: {
             name: 'presentation.png',
-            src: '/presentation/student/img_1.png',
+            src: imageUrl,
             w: originalWidth,
             h: originalHeight,
             mimeType: 'image/png',
@@ -63,8 +75,8 @@ export const ImageSlide = ({ isTeacher = false }: ImageSlideProps) => {
       style={{ position: 'fixed', inset: 0, width: '100%', height: '800px' }}
     >
       <Tldraw store={store} hideUi onMount={handleMount}>
-        <div
-          style={{
+        <Box
+          sx={{
             position: 'absolute',
             bottom: 0,
             right: 0,
@@ -72,7 +84,8 @@ export const ImageSlide = ({ isTeacher = false }: ImageSlideProps) => {
           }}
         >
           <ImageSlideToolbar isTeacher={isTeacher} />
-        </div>
+        </Box>
+        {teacherHint && <ImageSlideHint teacherHint={teacherHint} />}
       </Tldraw>
     </div>
   );
