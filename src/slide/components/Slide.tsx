@@ -1,6 +1,6 @@
-import { Box } from "@mui/material";
-import { slides } from "../const";
-import { ImageSlide } from "../../ImageSlide";
+import { Box } from '@mui/material';
+import { slides } from '../const';
+import { ImageSlide } from './ImageSlide';
 
 type Props = {
   isTeacher: boolean;
@@ -10,10 +10,10 @@ type Props = {
 export const Slide = ({ slideIndex, isTeacher }: Props) => {
   const slide = slides[slideIndex] || {};
 
-  console.log("slide", { slide });
+  console.log('slide', { slide });
 
   switch (slide.type) {
-    case "image":
+    case 'image':
       return (
         <ImageSlide
           isTeacher={isTeacher}
@@ -23,7 +23,7 @@ export const Slide = ({ slideIndex, isTeacher }: Props) => {
         />
       );
 
-    case "game":
+    case 'game':
       return <GameSlide />;
 
     default:

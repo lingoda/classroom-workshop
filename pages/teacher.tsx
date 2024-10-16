@@ -1,5 +1,5 @@
-import { Slide, SlideNavigation } from "../src/slide/components";
-import { useSlideNavigation } from "../src/slide/hooks";
+import { Slide, SlideNavigation } from '../src/slide/components';
+import { useSlideNavigation } from '../src/slide/hooks';
 
 export const Teacher = () => {
   const { currentSlideIndex } = useSlideNavigation();

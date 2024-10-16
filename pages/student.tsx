@@ -1,4 +1,4 @@
-import { ImageSlide } from '../src/ImageSlide';
+import { ImageSlide } from '../src/slide/components';
 
 export const Student = () => {
   return (
