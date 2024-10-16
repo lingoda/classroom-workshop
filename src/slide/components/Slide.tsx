@@ -17,7 +17,7 @@ export const Slide = ({ slideIndex, isTeacher }: Props) => {
       return (
         <ImageSlide
           isTeacher={isTeacher}
-          slideIndex={1}
+          slideIndex={slideIndex}
           imageUrl={slide.payload.imageUrl.src}
           teacherHint={slide.payload.teacherHint}
         />

@@ -1,7 +1,7 @@
 import { useSyncDemo } from '@tldraw/sync';
-import { AssetRecordType, Editor, Tldraw } from 'tldraw';
+import { AssetRecordType, Editor, Tldraw, useEditor } from 'tldraw';
 import 'tldraw/tldraw.css';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { ImageSlideToolbar } from './ImageSlideToolbar';
 import { Box } from '@mui/material';
 import { ImageSlideHint } from './ImageSlideHint';
@@ -20,15 +20,65 @@ export const ImageSlide = ({
   teacherHint,
 }: ImageSlideProps) => {
   const store = useSyncDemo({
-    roomId: `classroom-workshop-room-new-${slideIndex}`,
+    roomId: `classroom-workshop-room-totaly-new-xxxx`,
   });
 
   const handleMount = useCallback((editor: Editor) => {
+    for (let i = 0; i < 7; i++) {
+      editor.createPage({ name: `slide-${i}` });
+    }
+  }, []);
+
+  return (
+    <div
+      style={{ position: 'fixed', inset: 0, width: '100%', height: '800px' }}
+    >
+      <Tldraw store={store} hideUi onMount={handleMount}>
+        <EditorContext
+          slideIndex={slideIndex}
+          imageUrl={imageUrl}
+          isTeacher={isTeacher}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            zIndex: 1000,
+          }}
+        >
+          <ImageSlideToolbar isTeacher={isTeacher} />
+        </Box>
+
+        {teacherHint && <ImageSlideHint teacherHint={teacherHint} />}
+      </Tldraw>
+    </div>
+  );
+};
+
+const EditorContext = ({
+  slideIndex,
+  imageUrl,
+  isTeacher,
+}: {
+  slideIndex: number;
+  imageUrl: string;
+  isTeacher: boolean;
+}) => {
+  const editor = useEditor();
+  useEffect(() => {
+    const pageInfo = editor
+      .getPages()
+      .find((page) => page.name === `slide-${slideIndex + 1}`);
+
+    if (pageInfo) {
+      editor.setCurrentPage(pageInfo.id);
+    }
     const existingAsset = editor
       .getAssets()
       .find((asset) => asset.props.src === imageUrl);
 
-    if (!existingAsset) {
+    if (!existingAsset && isTeacher) {
       const assetId = AssetRecordType.createId();
       const originalWidth = 1990;
       const originalHeight = 1495;
@@ -68,25 +118,7 @@ export const ImageSlide = ({
       editor.zoomToFit();
       editor.resetZoom();
     }
-  }, []);
+  }, [editor, slideIndex, imageUrl, isTeacher]);
 
-  return (
-    <div
-      style={{ position: 'fixed', inset: 0, width: '100%', height: '800px' }}
-    >
-      <Tldraw store={store} hideUi onMount={handleMount}>
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-            zIndex: 1000,
-          }}
-        >
-          <ImageSlideToolbar isTeacher={isTeacher} />
-        </Box>
-        {teacherHint && <ImageSlideHint teacherHint={teacherHint} />}
-      </Tldraw>
-    </div>
-  );
+  return null;
 };
