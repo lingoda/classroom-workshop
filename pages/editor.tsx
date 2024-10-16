@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Grid2, List, Typography, Button, Box, Pagination, IconButton } from "@mui/material";
+import { Grid2, List, Typography, Button, Box, Pagination, IconButton, Tooltip } from "@mui/material";
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useTheme } from '@mui/material/styles';
 import { ImageContent } from '@/editor/ImageContent';
 import { Page, PageType, PageContent } from '@/editor/types';
+import { VideoContent } from '@/editor/VideoContent';
 
 const Editor = () => {
   const [pages, setPages] = useState<Page[]>([{ type: 'Image', content: null }]);
@@ -28,8 +29,8 @@ const Editor = () => {
   ];
 
   const updatePageContent = (content: PageContent) => {
-    setPages(prevPages => 
-      prevPages.map((page, index) => 
+    setPages(prevPages =>
+      prevPages.map((page, index) =>
         index === currentPage - 1 ? { ...page, content: content as any } : page
       )
     );
@@ -45,8 +46,8 @@ const Editor = () => {
   };
 
   const handleSidebarItemClick = (type: PageType) => {
-    setPages(prevPages => 
-      prevPages.map((page, index) => 
+    setPages(prevPages =>
+      prevPages.map((page, index) =>
         index === currentPage - 1 ? { ...page, type, content: null } : page
       )
     );
@@ -61,19 +62,34 @@ const Editor = () => {
   };
 
   return (
-    <Grid2 container spacing={2}>
+    <Grid2 container >
       <Grid2 size={10}>
-        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-          Editor - Page {currentPage}
-        </Typography>
-        <Box sx={{ width: '100%' }}>
-        {currentPageData.type === 'Image' && <ImageContent updatePageContent={updatePageContent} pageContent={currentPageData.content} />}
-        {currentPageData.type === 'Video' && <Typography>Video Content</Typography>}
-        {currentPageData.type === 'Quiz' && <Typography>Quiz Content</Typography>}
-        {currentPageData.type === 'Poll' && <Typography>Poll Content</Typography>}
-      </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, p: 2, backgroundColor: theme.palette.secondary.light }}>
+          <Typography variant="h4" component="h1" color={theme.palette.secondary.contrastText} sx={{ fontWeight: 'bold' }}>
+            Lesson Editor - Page {currentPage}
+          </Typography>
+          {pages.length > 1 && (
+            <Tooltip title="Remove Page">
+              <IconButton
+                onClick={handleRemovePage}
+                size="small"
+                sx={{
+                  color: theme.palette.error.main,
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
+        <Box sx={{ width: '100%', p: 2 }}>
+          {currentPageData.type === 'Image' && <ImageContent updatePageContent={updatePageContent} pageContent={currentPageData.content} />}
+          {currentPageData.type === 'Video' && <VideoContent updatePageContent={updatePageContent} pageContent={currentPageData.content} />}
+          {currentPageData.type === 'Quiz' && <Typography>Quiz Content</Typography>}
+          {currentPageData.type === 'Poll' && <Typography>Poll Content</Typography>}
+        </Box>
       </Grid2>
-      <Grid2 size={2} sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <Grid2 size={2} sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'space-between', px: 2, backgroundColor: theme.palette.grey[100] }}>
         <List sx={{ flexGrow: 1 }}>
           {sidebarItems.map((item) => (
             <ListItem key={item.text} disablePadding>
@@ -114,33 +130,25 @@ const Editor = () => {
             </ListItem>
           ))}
         </List>
-        <Box sx={{ display: 'flex', gap:2, justifyContent: 'center', alignItems: 'center', py: 2 }}>
-          <Pagination 
+        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center', pt: 2, minHeight: '80px' }}>
+          <Pagination
             shape="rounded"
-            count={pages.length} 
+            count={pages.length}
             page={currentPage}
             onChange={handlePageChange}
             size="small"
             siblingCount={0}
             boundaryCount={1}
             hideNextButton={currentPage === pages.length}
+            hidePrevButton={currentPage === 1}
           />
-          {currentPage === pages.length ? (
-            <IconButton onClick={handleAddPage} size="small" sx={{ ml: 1 }}>
-              <AddIcon />
-            </IconButton>
-          ) : <Box/>}
-          {pages.length > 1 && (
-          <IconButton
-            onClick={handleRemovePage}
-            size="small"
-            sx={{
-              color: theme.palette.error.main,
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        )}
+          {currentPage === pages.length && currentPageData.content !== null ? (
+              <IconButton onClick={handleAddPage} size="small" sx={{ ml: 1 }}>
+                <Tooltip title="Add Page">
+                  <AddIcon />
+                </Tooltip>
+              </IconButton>
+          ) : <Box />}
         </Box>
       </Grid2>
     </Grid2>
