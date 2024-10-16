@@ -6,6 +6,14 @@ type StartQuestionEvent = {
   };
 };
 
+type JoinQuestionEvent = {
+  type: "join_question";
+  payload: {
+    question: string;
+    user: string;
+  };
+};
+
 type AnswerQuestionEvent = {
   type: "answer_question";
   payload: {
@@ -25,5 +33,6 @@ type CorrectAnswerEvent = {
 
 type QuizEventUnion =
   | StartQuestionEvent
+  | JoinQuestionEvent
   | AnswerQuestionEvent
   | CorrectAnswerEvent;

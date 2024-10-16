@@ -6,6 +6,8 @@ type QuestionItem = {
   correctAnswer: string;
 };
 
+export const totalQuestionsAmount = mockedQuestions.quiz.length;
+
 export const getQuestionDataByIndex = (index: number): QuestionItem => {
   const matchedQuestion = mockedQuestions.quiz[index];
 

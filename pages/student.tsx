@@ -1,10 +1,14 @@
 import { useEffect } from "react";
-import { initStudentQuizClient } from "../src/quiz";
+import { initStudentQuizClient, QuizStudentLayer } from "../src/quiz";
 
 export const Student = () => {
   useQuiz();
 
-  return <div>Student</div>;
+  return (
+    <>
+      <QuizStudentLayer />
+    </>
+  );
 };
 
 const useQuiz = () => {

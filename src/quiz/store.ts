@@ -5,21 +5,26 @@ interface QuestionState {
   question: string;
   answerOptions: string[];
   correctAnswer: string | null;
-  status: "active" | "completed";
+  status: QuestionStatus;
   // Teacher panel:
-  participants: Array<{ user: string }>;
-  submittedAnswers: Array<{
-    user: string;
-    answer: string;
-  }>;
+  participants: Array<QuizParticipant>;
+}
+
+export type QuestionStatus = "active" | "completed";
+
+export interface QuizParticipant {
+  user: string;
+  submittedAnswer: string | null;
 }
 
 interface QuizState {
-  currentQuestion: QuestionState | null;
+  questions: QuestionState[];
+  currentQuestionIndex: number;
 }
 
 const defaultState: QuizState = {
-  currentQuestion: null,
+  questions: [],
+  currentQuestionIndex: -1,
 };
 
 interface QuizStore extends QuizState {
@@ -28,6 +33,9 @@ interface QuizStore extends QuizState {
     answers: string[],
     correctAnswer?: string
   ) => void;
+  joinQuestionParticipant: (question: string, user: string) => void;
+  saveSubmittedAnswer: (question: string, user: string, answer: string) => void;
+  saveCorrectAnswer: (question: string, answer: string) => void;
 }
 
 export const useQuizStore = create(
@@ -39,18 +47,91 @@ export const useQuizStore = create(
           (state) => {
             return {
               ...state,
-              currentQuestion: {
+              currentQuestionIndex: state.currentQuestionIndex + 1,
+              questions: state.questions.concat({
                 question,
                 answerOptions: answers,
                 correctAnswer: correctAnswer || null,
                 status: "active",
                 participants: [],
-                submittedAnswers: [],
-              },
+              }),
             };
           },
           false,
           "quiz/saveNewQuestion"
+        );
+      },
+      joinQuestionParticipant: (question, user) => {
+        return set(
+          (state) => {
+            return {
+              ...state,
+              questions: state.questions.map((currentQuestion) => {
+                if (currentQuestion.question !== question)
+                  return currentQuestion;
+
+                return {
+                  ...currentQuestion,
+                  participants: [
+                    ...currentQuestion.participants,
+                    { user, submittedAnswer: null },
+                  ],
+                };
+              }),
+            };
+          },
+          false,
+          "quiz/joinQuestionParticipant"
+        );
+      },
+      saveSubmittedAnswer: (question, user, answer) => {
+        return set(
+          (state) => {
+            return {
+              ...state,
+              questions: state.questions.map((currentQuestion) => {
+                if (currentQuestion.question !== question)
+                  return currentQuestion;
+
+                return {
+                  ...currentQuestion,
+                  participants: currentQuestion.participants.map(
+                    (participant) => {
+                      if (participant.user !== user) return participant;
+
+                      return {
+                        ...participant,
+                        submittedAnswer: answer,
+                      };
+                    }
+                  ),
+                };
+              }),
+            };
+          },
+          false,
+          "quiz/saveSubmittedAnswer"
+        );
+      },
+      saveCorrectAnswer: (question, answer) => {
+        return set(
+          (state) => {
+            return {
+              ...state,
+              questions: state.questions.map((currentQuestion) => {
+                if (currentQuestion.question !== question)
+                  return currentQuestion;
+
+                return {
+                  ...currentQuestion,
+                  correctAnswer: answer,
+                  status: "completed",
+                };
+              }),
+            };
+          },
+          false,
+          "quiz/saveCorrectAnswer"
         );
       },
     }),
@@ -59,8 +140,17 @@ export const useQuizStore = create(
 );
 
 // Actions:
-export const { saveNewQuestion } = useQuizStore.getState();
+export const {
+  saveNewQuestion,
+  joinQuestionParticipant,
+  saveSubmittedAnswer,
+  saveCorrectAnswer,
+} = useQuizStore.getState();
 
 // Selectors:
-export const currentQuestionSelector = (state: QuizState) =>
-  state.currentQuestion;
+export const currentQuestionSelector = (
+  state: QuizState
+): QuestionState | undefined => state.questions[state.currentQuestionIndex];
+
+export const currentQuestionIndexSelector = (state: QuizState) =>
+  state.currentQuestionIndex;
