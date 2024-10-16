@@ -24,3 +24,5 @@ export const useSlideStore = create(
     { name: "slideStore", enabled: true }
   )
 );
+
+export const { setSlideIndex } = useSlideStore.getState();

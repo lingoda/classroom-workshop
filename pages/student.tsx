@@ -1,9 +1,18 @@
-import { ImageSlide } from '../src/slide/components';
+import { Slide } from "../src/slide/components";
+
+import {
+  subscribeChangeSlideEvent,
+  useSlideNavigation,
+} from "../src/slide/hooks";
+
+subscribeChangeSlideEvent();
 
 export const Student = () => {
+  const { currentSlideIndex } = useSlideNavigation();
+
   return (
     <>
-      <ImageSlide slideIndex={1} imageUrl="/presentation/student/img_2.png" />
+      <Slide slideIndex={currentSlideIndex} isTeacher={false} />
     </>
   );
 };

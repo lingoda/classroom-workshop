@@ -1,28 +1,34 @@
+import { sendMessage, subscribeToSocket } from "@/webSocket";
 import { slides } from "..";
-import { useSlideStore } from "../slideStore";
-
-let currentSlideIndexStored = 0;
+import { setSlideIndex, useSlideStore } from "../slideStore";
 
 export const useSlideNavigation = () => {
   const currentSlideIndex = useSlideStore((state) => state.slideIndex);
-  const setCurrentSlideIndex = useSlideStore((state) => state.setSlideIndex);
-
   const min = 0;
   const max = slides.length - 1;
 
-  const applyWithConstraints = (newIndex: number) => {
+  const applyConstraints = (newIndex: number) => {
     const newIndexConstrained = Math.max(min, Math.min(max, newIndex));
-    currentSlideIndexStored = newIndexConstrained;
 
-    setCurrentSlideIndex(newIndexConstrained);
+    if (currentSlideIndex != newIndexConstrained) {
+      const event: ChangeSlideEvent = {
+        type: "change_slide",
+        payload: {
+          slideIndex: newIndexConstrained,
+        },
+      };
+
+      setSlideIndex(newIndexConstrained);
+      sendMessage(JSON.stringify(event));
+    }
   };
 
   const goForward = () => {
-    applyWithConstraints(currentSlideIndex + 1);
+    applyConstraints(currentSlideIndex + 1);
   };
 
   const goBackward = () => {
-    applyWithConstraints(currentSlideIndex - 1);
+    applyConstraints(currentSlideIndex - 1);
   };
 
   return {
@@ -32,4 +38,21 @@ export const useSlideNavigation = () => {
     forwardEnabled: currentSlideIndex < max,
     backwardEnabled: currentSlideIndex > min,
   };
+};
+
+export const subscribeChangeSlideEvent = () => {
+  return subscribeToSocket({
+    callback: (message) => {
+      if (!assertChangeSlideEvent(message)) return;
+      setSlideIndex(message.payload.slideIndex);
+    },
+  });
+};
+
+const assertChangeSlideEvent = (event: unknown): event is ChangeSlideEvent => {
+  return (
+    event !== null &&
+    typeof event === "object" &&
+    (event as any).type === "change_slide"
+  );
 };
