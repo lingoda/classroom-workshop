@@ -1,10 +1,12 @@
 import { subscribeToSocket } from "../webSocket";
+import { joinQuizQuestion } from "./sendMessage";
 import {
   joinQuestionParticipant,
   saveCorrectAnswer,
   saveNewQuestion,
   saveSubmittedAnswer,
 } from "./store";
+import { getRandomName } from "./utils";
 
 export const initStudentQuizClient = async () => {
   await subscribeStartQuestionEvent();
@@ -21,6 +23,8 @@ function subscribeStartQuestionEvent() {
     callback: (message) => {
       if (!assertStartQuestionEvent(message)) return;
       saveNewQuestion(message.payload.question, message.payload.answers);
+      const userName = getRandomName();
+      joinQuizQuestion(userName, message.payload.question);
     },
   });
 }

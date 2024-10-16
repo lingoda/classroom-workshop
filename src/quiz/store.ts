@@ -5,9 +5,16 @@ interface QuestionState {
   question: string;
   answerOptions: string[];
   correctAnswer: string | null;
-  status: "active" | "completed";
+  status: QuestionStatus;
   // Teacher panel:
-  participants: Array<{ user: string; submittedAnswer: string | null }>;
+  participants: Array<QuizParticipant>;
+}
+
+export type QuestionStatus = "active" | "completed";
+
+export interface QuizParticipant {
+  user: string;
+  submittedAnswer: string | null;
 }
 
 interface QuizState {
@@ -78,28 +85,33 @@ export const useQuizStore = create(
         );
       },
       saveSubmittedAnswer: (question, user, answer) => {
-        return set((state) => {
-          return {
-            ...state,
-            questions: state.questions.map((currentQuestion) => {
-              if (currentQuestion.question !== question) return currentQuestion;
+        return set(
+          (state) => {
+            return {
+              ...state,
+              questions: state.questions.map((currentQuestion) => {
+                if (currentQuestion.question !== question)
+                  return currentQuestion;
 
-              return {
-                ...currentQuestion,
-                participants: currentQuestion.participants.map(
-                  (participant) => {
-                    if (participant.user !== user) return participant;
+                return {
+                  ...currentQuestion,
+                  participants: currentQuestion.participants.map(
+                    (participant) => {
+                      if (participant.user !== user) return participant;
 
-                    return {
-                      ...participant,
-                      submittedAnswer: answer,
-                    };
-                  }
-                ),
-              };
-            }),
-          };
-        });
+                      return {
+                        ...participant,
+                        submittedAnswer: answer,
+                      };
+                    }
+                  ),
+                };
+              }),
+            };
+          },
+          false,
+          "quiz/saveSubmittedAnswer"
+        );
       },
       saveCorrectAnswer: (question, answer) => {
         return set(
@@ -139,3 +151,6 @@ export const {
 export const currentQuestionSelector = (
   state: QuizState
 ): QuestionState | undefined => state.questions[state.currentQuestionIndex];
+
+export const currentQuestionIndexSelector = (state: QuizState) =>
+  state.currentQuestionIndex;

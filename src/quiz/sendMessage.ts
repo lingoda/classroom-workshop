@@ -1,12 +1,20 @@
 import { sendMessage } from "../webSocket";
-import { getQuestionDataByIndex } from "./questionsLib";
-import { saveNewQuestion } from "./store";
-
-let currentQuestionIndex = 0;
+import { getQuestionDataByIndex, totalQuestionsAmount } from "./questionsLib";
+import {
+  currentQuestionIndexSelector,
+  saveNewQuestion,
+  useQuizStore,
+} from "./store";
 
 export const startNextQuizQuestion = () => {
-  startQuizQuestion(currentQuestionIndex);
-  currentQuestionIndex++;
+  const currentQuestionIndex = currentQuestionIndexSelector(
+    useQuizStore.getState()
+  );
+  if (currentQuestionIndex === totalQuestionsAmount - 1) {
+    return; // That was the last question
+  }
+
+  startQuizQuestion(currentQuestionIndex + 1);
 };
 
 export const startQuizQuestion = (questionIndex: number) => {
@@ -21,6 +29,41 @@ export const startQuizQuestion = (questionIndex: number) => {
     payload: {
       question: questionItem.text,
       answers: questionItem.answers,
+    },
+  });
+};
+
+export const joinQuizQuestion = (user: string, question: string) => {
+  sendQuizMessage({
+    type: "join_question",
+    payload: {
+      user,
+      question,
+    },
+  });
+};
+
+export const submitQuestionAnswer = (
+  user: string,
+  question: string,
+  answer: string
+) => {
+  sendQuizMessage({
+    type: "answer_question",
+    payload: {
+      user,
+      question,
+      answer,
+    },
+  });
+};
+
+export const sendCorrectAnswer = (question: string, answer: string) => {
+  sendQuizMessage({
+    type: "correct_answer",
+    payload: {
+      question,
+      answer,
     },
   });
 };

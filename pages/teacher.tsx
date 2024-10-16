@@ -1,24 +1,24 @@
 import { useEffect } from "react";
-import { initTeacherQuizClient, startQuizQuestion } from "../src/quiz";
+import {
+  initTeacherQuizClient,
+  QuizTeacherLayer,
+  startQuizQuestion,
+} from "../src/quiz";
 
 export const Teacher = () => {
   useQuiz();
 
-  return <div>Teacher</div>;
+  return (
+    <>
+      <QuizTeacherLayer />
+    </>
+  );
 };
 
 const useQuiz = () => {
   useEffect(() => {
-    const onMount = async () => {
-      await initTeacherQuizClient();
-      await wait(500);
-      startQuizQuestion(0);
-    };
-
-    onMount();
+    initTeacherQuizClient();
   }, []);
 };
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default Teacher;
