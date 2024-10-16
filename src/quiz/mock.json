@@ -1,0 +1,39 @@
+{
+  "quiz": [
+    {
+      "question": "Choose the correct sentence:",
+      "answers": {
+        "I is a teacher.": false,
+        "I am a teacher.": true,
+        "I are a teacher.": false,
+        "I be a teacher.": false
+      }
+    },
+    {
+      "question": "What is the plural form of 'book'?",
+      "answers": {
+        "Books": true,
+        "Bookes": false,
+        "Bookz": false,
+        "Bokes": false
+      }
+    },
+    {
+      "question": "Which word is a verb?",
+      "answers": { "Run": true, "Cat": false, "Blue": false, "Happy": false }
+    },
+    {
+      "question": "What is the opposite of 'hot'?",
+      "answers": { "Cold": true, "Big": false, "Fast": false, "Small": false }
+    },
+    {
+      "question": "Which sentence is in the present tense?",
+      "answers": {
+        "She is eating.": true,
+        "She ate.": false,
+        "She will eat.": false,
+        "She has eaten.": false
+      }
+    }
+  ]
+}
