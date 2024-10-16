@@ -1,20 +1,10 @@
-import { useEffect } from "react";
-import { initStudentQuizClient, QuizStudentLayer } from "../src/quiz";
+import { Presentation } from '../src/Presentation';
 
 export const Student = () => {
-  useQuiz();
-
   return (
     <>
-      <QuizStudentLayer />
+      <Presentation />
     </>
   );
 };
-
-const useQuiz = () => {
-  useEffect(() => {
-    initStudentQuizClient();
-  }, []);
-};
-
 export default Student;
