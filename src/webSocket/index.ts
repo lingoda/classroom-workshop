@@ -12,10 +12,14 @@ export function subscribeToSocket({
 }: SubscribeParams): Promise<void> {
   callbacks.push(callback);
 
-  if (socketService) {
+  if (socketService && connected) {
     console.log("Already connected to WebSocket");
 
-    if (connected) return Promise.resolve();
+    return Promise.reject();
+  }
+
+  if (socketService && !connected) {
+    console.log("You are already in connecting state");
 
     return Promise.reject();
   }
