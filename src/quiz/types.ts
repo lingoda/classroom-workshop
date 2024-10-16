@@ -31,8 +31,16 @@ type CorrectAnswerEvent = {
   };
 };
 
+type ChangeSlideEvent = {
+  type: "change_slide";
+  payload: {
+    slideIndex: number;
+  };
+};
+
 type QuizEventUnion =
   | StartQuestionEvent
   | JoinQuestionEvent
   | AnswerQuestionEvent
-  | CorrectAnswerEvent;
+  | CorrectAnswerEvent
+  | ChangeSlideEvent;

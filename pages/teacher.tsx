@@ -1,24 +1,24 @@
-import { useEffect } from "react";
+import { Slide, SlideNavigation } from "../src/slide/components";
 import {
-  initTeacherQuizClient,
-  QuizTeacherLayer,
-  startQuizQuestion,
-} from "../src/quiz";
+  subscribeChangeSlideEvent,
+  useSlideNavigation,
+} from "../src/slide/hooks";
+
+subscribeChangeSlideEvent();
 
 export const Teacher = () => {
-  useQuiz();
+  const { currentSlideIndex } = useSlideNavigation();
 
   return (
-    <>
-      <QuizTeacherLayer />
-    </>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <div style={{ flex: 1 }}>
+        <Slide slideIndex={currentSlideIndex} isTeacher />
+      </div>
+      <div style={{ position: "absolute", bottom: 0, width: "100%" }}>
+        <SlideNavigation />
+      </div>
+    </div>
   );
-};
-
-const useQuiz = () => {
-  useEffect(() => {
-    initTeacherQuizClient();
-  }, []);
 };
 
 export default Teacher;

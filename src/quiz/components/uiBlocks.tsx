@@ -1,8 +1,8 @@
-import { Box, Button, Grid2, Stack, styled } from "@mui/material";
+import { Box, Button, Grid2, Stack, styled } from '@mui/material';
 
 export const QuizLayerContainer = styled(Box)`
   width: 100%;
-  height: 100%;
+  height: 90%;
   top: 0;
   left: 0;
   position: absolute;
@@ -15,7 +15,7 @@ export const QuizLayerContainer = styled(Box)`
   justify-content: center;
 `;
 
-export const QuestionTitle = styled("h2")`
+export const QuestionTitle = styled('h2')`
   font-size: 24px;
   font-weight: bold;
   color: #153bff;
@@ -23,7 +23,7 @@ export const QuestionTitle = styled("h2")`
   margin: 0;
 `;
 
-export const UserHeader = styled("div")`
+export const UserHeader = styled('div')`
   position: absolute;
   top: 0;
   right: 0;

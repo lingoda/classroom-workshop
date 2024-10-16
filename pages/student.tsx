@@ -1,20 +1,19 @@
-import { useEffect } from "react";
-import { initStudentQuizClient, QuizStudentLayer } from "../src/quiz";
+import { Slide } from "../src/slide/components";
+
+import {
+  subscribeChangeSlideEvent,
+  useSlideNavigation,
+} from "../src/slide/hooks";
+
+subscribeChangeSlideEvent();
 
 export const Student = () => {
-  useQuiz();
+  const { currentSlideIndex } = useSlideNavigation();
 
   return (
     <>
-      <QuizStudentLayer />
+      <Slide slideIndex={currentSlideIndex} isTeacher={false} />
     </>
   );
 };
-
-const useQuiz = () => {
-  useEffect(() => {
-    initStudentQuizClient();
-  }, []);
-};
-
 export default Student;
