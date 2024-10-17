@@ -1,10 +1,16 @@
-import { Box, Button, Typography } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { slides } from "..";
-import { useSlideNavigation } from "../hooks/useSlideNavigation";
+import { Box, Button, Typography } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { slides } from '..';
+import { useSlideNavigation } from '../hooks/useSlideNavigation';
 
-export const SlideNavigation = () => {
+interface SlideNavigationProps {
+  isTeacher?: boolean;
+}
+
+export const SlideNavigation = ({
+  isTeacher = false,
+}: SlideNavigationProps) => {
   const {
     currentSlideIndex,
     goForward,
@@ -18,34 +24,43 @@ export const SlideNavigation = () => {
   return (
     <Box
       sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         gap: 2,
+        marginBottom: 1,
       }}
     >
-      <Button
-        variant="outlined"
-        onClick={goBackward}
-        disabled={!backwardEnabled}
-      >
-        <ArrowBackIcon />
-      </Button>
+      {isTeacher && (
+        <Button
+          variant="outlined"
+          onClick={goBackward}
+          disabled={!backwardEnabled}
+        >
+          <ArrowBackIcon />
+        </Button>
+      )}
       <Box
         sx={{
-          userSelect: "none",
-          WebkitUserSelect: "none",
-          MozUserSelect: "none",
-          msUserSelect: "none",
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none',
         }}
       >
         <Typography variant="body1">
           {currentSlideIndex + 1} / {totalSlides}
         </Typography>
       </Box>
-      <Button variant="outlined" onClick={goForward} disabled={!forwardEnabled}>
-        <ArrowForwardIcon />
-      </Button>
+      {isTeacher && (
+        <Button
+          variant="outlined"
+          onClick={goForward}
+          disabled={!forwardEnabled}
+        >
+          <ArrowForwardIcon />
+        </Button>
+      )}
     </Box>
   );
 };
