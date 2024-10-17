@@ -52,8 +52,9 @@ function getAnswerOptionsParticipants(
   answerOption: string,
   participants: QuizParticipant[]
 ) {
-  return participants
+  const participantsWithAnswers = participants
     .filter((participant) => participant.submittedAnswer === answerOption)
-    .map((participant) => participant.user)
-    .join(", ");
+    .map((participant) => participant.user);
+
+  return participantsWithAnswers.length ? participantsWithAnswers[0] : [];
 }
