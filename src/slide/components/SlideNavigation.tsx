@@ -26,9 +26,9 @@ export const SlideNavigation = ({
       sx={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
         gap: 2,
         marginBottom: 1,
+        marginLeft: 1,
       }}
     >
       {isTeacher && (
