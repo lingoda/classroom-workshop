@@ -31,7 +31,7 @@ export const ImageSlide = ({
 
   return (
     <div
-      style={{ position: 'fixed', inset: 0, width: '100%', height: '800px' }}
+      style={{ position: 'fixed', inset: 0, width: '100%', height: '648px' }}
     >
       <Tldraw store={store} hideUi onMount={handleMount}>
         <EditorContext
@@ -82,7 +82,7 @@ const EditorContext = ({
       const assetId = AssetRecordType.createId();
       const originalWidth = 1990;
       const originalHeight = 1495;
-      const targetHeight = 800;
+      const targetHeight = 648;
       const scaleFactor = targetHeight / originalHeight;
       const scaledWidth = originalWidth * scaleFactor;
 
