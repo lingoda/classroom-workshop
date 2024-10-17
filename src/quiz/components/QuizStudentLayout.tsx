@@ -20,7 +20,7 @@ export const QuizStudentLayout = ({ userName, currentQuestion }: Props) => {
     }
 
     return <>
-        <Stack spacing={2}>
+        <Stack spacing={2} flexDirection="column" alignItems="center">
         <StudentProgressBar
             totalQuestionsAmount={totalQuestionsAmount}
             answers={myAnswers}
