@@ -1,5 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { Grid2, List, Typography, Button, Box, Pagination, IconButton, Tooltip } from "@mui/material";
+import {
+  Grid2,
+  List,
+  Typography,
+  Button,
+  Box,
+  Pagination,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -10,19 +19,28 @@ import QuizIcon from '@mui/icons-material/Quiz';
 import PollIcon from '@mui/icons-material/Poll';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
 import { useTheme } from '@mui/material/styles';
 import { ImageContent } from '@/editor/ImageContent';
 import { Page, PageType, PageContent } from '@/editor/types';
 import { VideoContent } from '@/editor/VideoContent';
 import { QuizContent } from '@/editor/QuizContent';
+import { useRouter } from 'next/router';
 
 const Editor = () => {
-  const [pages, setPages] = useState<Page[]>([{ type: 'Image', content: null }]);
+  const [pages, setPages] = useState<Page[]>([
+    { type: 'Image', content: null },
+  ]);
   const [currentPage, setCurrentPage] = useState(1);
   const theme = useTheme();
+  const router = useRouter();
   const currentPageData = pages[currentPage - 1];
 
-  const sidebarItems: { text: Page['type']; icon: JSX.Element; disabled: boolean }[] = [
+  const sidebarItems: {
+    text: Page['type'];
+    icon: JSX.Element;
+    disabled: boolean;
+  }[] = [
     { text: 'Image', icon: <ImageIcon />, disabled: false },
     { text: 'Video', icon: <VideoLibraryIcon />, disabled: false },
     { text: 'Quiz', icon: <QuizIcon />, disabled: false },
@@ -30,24 +48,27 @@ const Editor = () => {
   ];
 
   const updatePageContent = (content: PageContent) => {
-    setPages(prevPages =>
+    setPages((prevPages) =>
       prevPages.map((page, index) =>
         index === currentPage - 1 ? { ...page, content: content as any } : page
       )
     );
   };
 
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
     setCurrentPage(value);
   };
 
   const handleAddPage = () => {
-    setPages(prevPages => [...prevPages, { type: 'Image', content: null }]);
+    setPages((prevPages) => [...prevPages, { type: 'Image', content: null }]);
     setCurrentPage(pages.length + 1);
   };
 
   const handleSidebarItemClick = (type: PageType) => {
-    setPages(prevPages =>
+    setPages((prevPages) =>
       prevPages.map((page, index) =>
         index === currentPage - 1 ? { ...page, type, content: null } : page
       )
@@ -58,15 +79,35 @@ const Editor = () => {
     if (pages.length > 1) {
       const newPages = pages.filter((_, index) => index !== currentPage - 1);
       setPages(newPages);
-      setCurrentPage(prev => (prev > newPages.length ? newPages.length : prev));
+      setCurrentPage((prev) =>
+        prev > newPages.length ? newPages.length : prev
+      );
     }
   };
 
+  const handleSavePresentation = () => {
+    router.push('/presentation');
+  };
+
   return (
-    <Grid2 container >
+    <Grid2 container>
       <Grid2 size={10}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, p: 2, backgroundColor: theme.palette.secondary.light }}>
-          <Typography variant="h4" component="h1" color={theme.palette.secondary.contrastText} sx={{ fontWeight: 'bold' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+            p: 2,
+            backgroundColor: theme.palette.secondary.light,
+          }}
+        >
+          <Typography
+            variant="h4"
+            component="h1"
+            color={theme.palette.secondary.contrastText}
+            sx={{ fontWeight: 'bold' }}
+          >
             Lesson Editor - Page {currentPage}
           </Typography>
           {pages.length > 1 && (
@@ -82,15 +123,48 @@ const Editor = () => {
               </IconButton>
             </Tooltip>
           )}
+          <Tooltip title="Save Presentation">
+            <IconButton
+              onClick={handleSavePresentation}
+              size="small"
+              sx={{
+                color: theme.palette.common.white,
+              }}
+            >
+              <SaveIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
         <Box sx={{ width: '100%', p: 2 }}>
-          {currentPageData.type === 'Image' && <ImageContent updatePageContent={updatePageContent} pageContent={currentPageData.content} />}
-          {currentPageData.type === 'Video' && <VideoContent updatePageContent={updatePageContent} pageContent={currentPageData.content} />}
+          {currentPageData.type === 'Image' && (
+            <ImageContent
+              updatePageContent={updatePageContent}
+              pageContent={currentPageData.content}
+            />
+          )}
+          {currentPageData.type === 'Video' && (
+            <VideoContent
+              updatePageContent={updatePageContent}
+              pageContent={currentPageData.content}
+            />
+          )}
           {currentPageData.type === 'Quiz' && <QuizContent />}
-          {currentPageData.type === 'Poll' && <Typography>Poll Content</Typography>}
+          {currentPageData.type === 'Poll' && (
+            <Typography>Poll Content</Typography>
+          )}
         </Box>
       </Grid2>
-      <Grid2 size={2} sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', justifyContent: 'space-between', px: 2, backgroundColor: theme.palette.grey[100] }}>
+      <Grid2
+        size={2}
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          justifyContent: 'space-between',
+          px: 2,
+          backgroundColor: theme.palette.grey[100],
+        }}
+      >
         <List sx={{ flexGrow: 1 }}>
           {sidebarItems.map((item) => (
             <ListItem key={item.text} disablePadding>
@@ -119,9 +193,11 @@ const Editor = () => {
               >
                 <ListItemIcon
                   sx={{
-                    color: pages[currentPage - 1].type === item.text && !item.disabled
-                      ? theme.palette.primary.contrastText
-                      : 'inherit',
+                    color:
+                      pages[currentPage - 1].type === item.text &&
+                      !item.disabled
+                        ? theme.palette.primary.contrastText
+                        : 'inherit',
                   }}
                 >
                   {item.icon}
@@ -131,7 +207,16 @@ const Editor = () => {
             </ListItem>
           ))}
         </List>
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center', pt: 2, minHeight: '80px' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 2,
+            justifyContent: 'center',
+            alignItems: 'center',
+            pt: 2,
+            minHeight: '80px',
+          }}
+        >
           <Pagination
             shape="rounded"
             count={pages.length}
@@ -143,13 +228,17 @@ const Editor = () => {
             hideNextButton={currentPage === pages.length}
             hidePrevButton={currentPage === 1}
           />
-          {currentPage === pages.length && (currentPageData.content !== null || currentPageData.type === 'Quiz') ? (
-              <IconButton onClick={handleAddPage} size="small" sx={{ ml: 1 }}>
-                <Tooltip title="Add Page">
-                  <AddIcon />
-                </Tooltip>
-              </IconButton>
-          ) : <Box />}
+          {currentPage === pages.length &&
+          (currentPageData.content !== null ||
+            currentPageData.type === 'Quiz') ? (
+            <IconButton onClick={handleAddPage} size="small" sx={{ ml: 1 }}>
+              <Tooltip title="Add Page">
+                <AddIcon />
+              </Tooltip>
+            </IconButton>
+          ) : (
+            <Box />
+          )}
         </Box>
       </Grid2>
     </Grid2>
