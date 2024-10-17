@@ -46,6 +46,7 @@ export const startQuizQuestion = (questionIndex: number) => {
     payload: {
       question: questionItem.text,
       answers: questionItem.answers,
+      correctAnswer: questionItem.correctAnswer,
     },
   });
 };

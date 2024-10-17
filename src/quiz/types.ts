@@ -3,6 +3,7 @@ type StartQuestionEvent = {
   payload: {
     question: string;
     answers: string[];
+    correctAnswer: string;
   };
 };
 

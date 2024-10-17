@@ -24,7 +24,7 @@ function subscribeStartQuestionEvent() {
   return subscribeToSocket({
     callback: (message) => {
       if (!assertStartQuestionEvent(message)) return;
-      saveNewQuestion(message.payload.question, message.payload.answers);
+      saveNewQuestion(message.payload.question, message.payload.answers, message.payload.correctAnswer);
       const userName = getRandomName();
       joinQuizQuestion(userName, message.payload.question);
     },

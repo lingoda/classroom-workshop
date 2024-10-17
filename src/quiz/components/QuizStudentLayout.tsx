@@ -2,8 +2,10 @@ import { QuestionTitle } from "./uiBlocks"
 import { Stack } from "@mui/material"
 import { UserHeader } from "./uiBlocks"
 import { AnswersGrid } from "./AnswersGrid"
-import { QuestionState } from "../store";
+import { QuestionState, selectMyAnswersResultResults, useQuizStore, saveMyAnswerResult } from "../store";
 import { submitQuestionAnswer } from "../sendMessage";
+import { StudentProgressBar } from "./StudentProgressBar";
+import { totalQuestionsAmount } from "../questionsLib";
 
 interface Props {
     userName: string;
@@ -11,20 +13,29 @@ interface Props {
 }
 
 export const QuizStudentLayout = ({ userName, currentQuestion }: Props) => {
+    const myAnswers = useQuizStore(selectMyAnswersResultResults)
+
     if (!currentQuestion) {
         return "Waiting for the quiz to start...";
     }
 
     return <>
-        <UserHeader>Student: {userName}</UserHeader>
         <Stack spacing={2}>
+        <StudentProgressBar
+            totalQuestionsAmount={totalQuestionsAmount}
+            answers={myAnswers}
+        />
+        <UserHeader>Student: {userName}</UserHeader>
             <QuestionTitle>{currentQuestion.question}</QuestionTitle>
             <AnswersGrid
                 answerOptions={currentQuestion.answerOptions}
                 correctAnswer={currentQuestion.correctAnswer}
                 questionStatus={currentQuestion.status}
                 onSubmit={answer => {
+                    saveMyAnswerResult(answer === currentQuestion.correctAnswer)
                     submitQuestionAnswer(userName, currentQuestion.question, answer)
+                    console.log('answer', answer)
+                    console.log('currentQuestion.correctAnswer', currentQuestion.correctAnswer)
                 }}
             />
         </Stack>

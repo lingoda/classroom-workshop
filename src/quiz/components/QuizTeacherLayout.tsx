@@ -44,7 +44,7 @@ export const QuizTeacherLayout = ({
       <TeacherProgressBar />
       <UserHeader>Teacher: {userName}</UserHeader>
       {currentQuestion && (
-        <Stack spacing={2} width="100%">
+        <Stack spacing={2} width="100%" maxWidth="500px">
           <QuestionTitle>{currentQuestion.question}</QuestionTitle>
           <ResultsGrid
             answerOptions={currentQuestion.answerOptions}

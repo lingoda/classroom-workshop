@@ -21,24 +21,27 @@ interface QuizState {
   questions: QuestionState[];
   currentQuestionIndex: number;
   quizCompleted: boolean;
+  myAnswersResult: boolean[];
 }
 
 const defaultState: QuizState = {
   questions: [],
   currentQuestionIndex: -1,
   quizCompleted: false,
+  myAnswersResult: [],
 };
 
 interface QuizStore extends QuizState {
   saveNewQuestion: (
     question: string,
     answers: string[],
-    correctAnswer?: string
+    correctAnswer: string
   ) => void;
   joinQuestionParticipant: (question: string, user: string) => void;
   saveSubmittedAnswer: (question: string, user: string, answer: string) => void;
   saveCorrectAnswer: (question: string, answer: string) => void;
   setQuizCompleted: (quizCompleted: boolean) => void;
+  saveMyAnswerResult: (isCorrect: boolean) => void;
 }
 
 export const useQuizStore = create(
@@ -54,7 +57,7 @@ export const useQuizStore = create(
               questions: state.questions.concat({
                 question,
                 answerOptions: answers,
-                correctAnswer: correctAnswer || null,
+                correctAnswer: correctAnswer,
                 status: "active",
                 participants: [],
               }),
@@ -138,6 +141,14 @@ export const useQuizStore = create(
         );
       },
       setQuizCompleted: (quizCompleted) => set({ quizCompleted }),
+      saveMyAnswerResult: (isCorrect: boolean) => {
+        set((state) => {
+          return {
+            ...state,
+            myAnswersResult: [...state.myAnswersResult, isCorrect],
+          };
+        });
+      },
     }),
     { name: "quizStore", enabled: true }
   )
@@ -150,6 +161,7 @@ export const {
   saveSubmittedAnswer,
   saveCorrectAnswer,
   setQuizCompleted,
+  saveMyAnswerResult,
 } = useQuizStore.getState();
 
 // Selectors:
@@ -159,6 +171,8 @@ export const currentQuestionSelector = (
   console.log("state", state);
   return state.questions[state.currentQuestionIndex];
 };
+
+export const selectMyAnswersResultResults = (state: QuizState) => state.myAnswersResult;
 
 export const currentQuestionIndexSelector = (state: QuizState) =>
   state.currentQuestionIndex;
