@@ -4,6 +4,7 @@ import { QuestionTitle, UserHeader } from "./uiBlocks";
 import { ResultsGrid } from "./ResultsGrid";
 import { QuestionState } from "../store";
 import { useEffect } from "react";
+import { TeacherProgressBar } from "./TeacherProgressBar";
 
 interface Props {
   currentQuestion: QuestionState | undefined;
@@ -40,6 +41,7 @@ export const QuizTeacherLayout = ({
 
   return (
     <>
+      <TeacherProgressBar />
       <UserHeader>Teacher: {userName}</UserHeader>
       {currentQuestion && (
         <Stack spacing={2} width="100%">
