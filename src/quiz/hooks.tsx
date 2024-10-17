@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
-import { getRandomName } from './utils';
-import { saveCorrectAnswer, useQuizStore } from './store';
-import { currentQuestionIndexSelector } from './store';
-import { currentQuestionSelector } from './store';
-import { sendCorrectAnswer } from './sendMessage';
+import { useEffect, useState } from "react";
+import { getRandomName } from "./utils";
+import { saveCorrectAnswer, useQuizStore } from "./store";
+import { currentQuestionIndexSelector } from "./store";
+import { currentQuestionSelector } from "./store";
+import { sendCorrectAnswer } from "./sendMessage";
+import allQuestions from "./mock.json";
 
 export const useUserPersistentName = () => {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
 
   useEffect(() => {
     setName(getRandomName());
@@ -18,29 +19,32 @@ export const useUserPersistentName = () => {
 export const useTeacherSideQuiz = () => {
   const userName = useUserPersistentName();
   const currentQuestion = useQuizStore(currentQuestionSelector);
-  console.log('currentQuestion', currentQuestion);
+  console.log("currentQuestion", currentQuestion);
   const currentQuestionIndex = useQuizStore(currentQuestionIndexSelector);
-  console.log('currentQuestionIndex', currentQuestionIndex);
+  console.log("currentQuestionIndex", currentQuestionIndex);
   const questionParticipants = currentQuestion?.participants || [];
-  console.log('questionParticipants', questionParticipants);
+  console.log("questionParticipants", questionParticipants);
   const questionParticipantsAmount = 1;
-  console.log('questionParticipantsAmount', questionParticipantsAmount);
+  console.log("questionParticipantsAmount", questionParticipantsAmount);
   const submittedParticipants = questionParticipants.filter(
     (participant) => participant.submittedAnswer !== null
   );
   const submittedParticipantsAmount = submittedParticipants.length;
 
-  console.log('questionParticipantsAmount', questionParticipantsAmount);
-  console.log('submittedParticipantsAmount', submittedParticipantsAmount);
+  console.log("questionParticipantsAmount", questionParticipantsAmount);
+  console.log("submittedParticipantsAmount", submittedParticipantsAmount);
+
+  const quizCompleted = useQuizStore((state) => state.quizCompleted);
+  const isLastQuestion = currentQuestionIndex === allQuestions.quiz.length - 1;
 
   useEffect(() => {
     if (
-      currentQuestion?.status === 'active' &&
+      currentQuestion?.status === "active" &&
       questionParticipantsAmount > 0 &&
       submittedParticipantsAmount >= questionParticipantsAmount
     ) {
       if (!currentQuestion.correctAnswer) {
-        throw new Error('Teacher is expected to have a correct answer');
+        throw new Error("Teacher is expected to have a correct answer");
       }
       saveCorrectAnswer(
         currentQuestion.question,
@@ -63,5 +67,7 @@ export const useTeacherSideQuiz = () => {
     currentQuestionIndex,
     questionParticipantsAmount,
     submittedParticipantsAmount,
+    quizCompleted,
+    isLastQuestion,
   };
 };

@@ -20,11 +20,13 @@ export interface QuizParticipant {
 interface QuizState {
   questions: QuestionState[];
   currentQuestionIndex: number;
+  quizCompleted: boolean;
 }
 
 const defaultState: QuizState = {
   questions: [],
   currentQuestionIndex: -1,
+  quizCompleted: false,
 };
 
 interface QuizStore extends QuizState {
@@ -36,6 +38,7 @@ interface QuizStore extends QuizState {
   joinQuestionParticipant: (question: string, user: string) => void;
   saveSubmittedAnswer: (question: string, user: string, answer: string) => void;
   saveCorrectAnswer: (question: string, answer: string) => void;
+  setQuizCompleted: (quizCompleted: boolean) => void;
 }
 
 export const useQuizStore = create(
@@ -134,6 +137,7 @@ export const useQuizStore = create(
           "quiz/saveCorrectAnswer"
         );
       },
+      setQuizCompleted: (quizCompleted) => set({ quizCompleted }),
     }),
     { name: "quizStore", enabled: true }
   )
@@ -145,14 +149,15 @@ export const {
   joinQuestionParticipant,
   saveSubmittedAnswer,
   saveCorrectAnswer,
+  setQuizCompleted,
 } = useQuizStore.getState();
 
 // Selectors:
 export const currentQuestionSelector = (
   state: QuizState
 ): QuestionState | undefined => {
-  console.log('state', state);
-  return state.questions[state.currentQuestionIndex]
+  console.log("state", state);
+  return state.questions[state.currentQuestionIndex];
 };
 
 export const currentQuestionIndexSelector = (state: QuizState) =>

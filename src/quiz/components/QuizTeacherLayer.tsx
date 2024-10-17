@@ -1,7 +1,7 @@
-import { QuizLayerContainer } from './uiBlocks';
-import { startQuizQuestion } from '../sendMessage';
-import { useTeacherSideQuiz } from '../hooks';
-import { QuizTeacherLayout } from './QuizTeacherLayout';
+import { QuizLayerContainer } from "./uiBlocks";
+import { startQuizQuestion } from "../sendMessage";
+import { useTeacherSideQuiz } from "../hooks";
+import { QuizTeacherLayout } from "./QuizTeacherLayout";
 
 export const QuizTeacherLayer = () => {
   const {
@@ -10,7 +10,13 @@ export const QuizTeacherLayer = () => {
     currentQuestionIndex,
     questionParticipantsAmount,
     submittedParticipantsAmount,
+    quizCompleted,
+    isLastQuestion,
   } = useTeacherSideQuiz();
+
+  if (quizCompleted) {
+    return <QuizLayerContainer>Congratulations</QuizLayerContainer>;
+  }
 
   return (
     <QuizLayerContainer>
@@ -21,6 +27,8 @@ export const QuizTeacherLayer = () => {
         submittedParticipantsAmount={submittedParticipantsAmount}
         startQuizQuestion={startQuizQuestion}
         userName={userName}
+        quizCompleted={quizCompleted}
+        isLastQuestion={isLastQuestion}
       />
     </QuizLayerContainer>
   );

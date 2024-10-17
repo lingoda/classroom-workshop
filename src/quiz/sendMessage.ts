@@ -3,8 +3,10 @@ import { getQuestionDataByIndex, totalQuestionsAmount } from "./questionsLib";
 import {
   currentQuestionIndexSelector,
   saveNewQuestion,
+  setQuizCompleted,
   useQuizStore,
 } from "./store";
+import mockedQuestions from "./mock.json";
 
 export const startNextQuizQuestion = () => {
   const currentQuestionIndex = currentQuestionIndexSelector(
@@ -18,6 +20,16 @@ export const startNextQuizQuestion = () => {
 };
 
 export const startQuizQuestion = (questionIndex: number) => {
+  if (questionIndex > mockedQuestions.quiz.length - 1) {
+    setQuizCompleted(true);
+
+    sendQuizMessage({
+      type: "quiz_completed",
+    });
+
+    return;
+  }
+
   const questionItem = getQuestionDataByIndex(questionIndex);
 
   if (!questionItem) {

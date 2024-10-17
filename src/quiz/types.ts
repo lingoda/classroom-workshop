@@ -31,6 +31,10 @@ type CorrectAnswerEvent = {
   };
 };
 
+type QuizCompletedEvent = {
+  type: "quiz_completed";
+};
+
 type ChangeSlideEvent = {
   type: "change_slide";
   payload: {
@@ -43,4 +47,5 @@ type QuizEventUnion =
   | JoinQuestionEvent
   | AnswerQuestionEvent
   | CorrectAnswerEvent
+  | QuizCompletedEvent
   | ChangeSlideEvent;

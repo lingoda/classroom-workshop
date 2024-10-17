@@ -5,12 +5,14 @@ import {
   saveCorrectAnswer,
   saveNewQuestion,
   saveSubmittedAnswer,
+  setQuizCompleted,
 } from "./store";
 import { getRandomName } from "./utils";
 
 export const initStudentQuizClient = async () => {
   await subscribeStartQuestionEvent();
   await subscribeCorrectAnswerEvent();
+  await subscribeQuizCompletedEvent();
 };
 
 export const initTeacherQuizClient = async () => {
@@ -64,6 +66,7 @@ function subscribeAnswerQuestionEvent() {
     },
   });
 }
+
 function assertAnswerQuestionEvent(
   event: unknown
 ): event is AnswerQuestionEvent {
@@ -72,6 +75,23 @@ function assertAnswerQuestionEvent(
     typeof event === "object" &&
     (event as any).type === "answer_question"
   );
+}
+
+function assertQuizCompletedEvent(event: unknown): event is QuizCompletedEvent {
+  return (
+    event !== null &&
+    typeof event === "object" &&
+    (event as any).type === "quiz_completed"
+  );
+}
+
+function subscribeQuizCompletedEvent() {
+  return subscribeToSocket({
+    callback: (message) => {
+      if (!assertQuizCompletedEvent(message)) return;
+      setQuizCompleted(true);
+    },
+  });
 }
 
 function subscribeCorrectAnswerEvent() {
