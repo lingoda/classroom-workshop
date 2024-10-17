@@ -1,10 +1,8 @@
-import { Box, Button, Grid2, Stack, styled } from "@mui/material";
 import { currentQuestionSelector, useQuizStore } from "../store";
-import { AnswersGrid } from "./AnswersGrid";
-import { getRandomName } from "../utils";
-import { QuestionTitle, QuizLayerContainer, UserHeader } from "./uiBlocks";
+import { QuizLayerContainer } from "./uiBlocks";
 import { useUserPersistentName } from "../hooks";
 import { submitQuestionAnswer } from "../sendMessage";
+import { QuizStudentLayout } from "./QuizStudentLayout";
 
 export const QuizStudentLayer = () => {
   const userName = useUserPersistentName();
@@ -16,18 +14,10 @@ export const QuizStudentLayer = () => {
 
   return (
     <QuizLayerContainer>
-      <UserHeader>Student: {userName}</UserHeader>
-      <Stack spacing={2}>
-        <QuestionTitle>{currentQuestion.question}</QuestionTitle>
-        <AnswersGrid
-          answerOptions={currentQuestion.answerOptions}
-          correctAnswer={currentQuestion.correctAnswer}
-          questionStatus={currentQuestion.status}
-          onSubmit={(answer) =>
-            submitQuestionAnswer(userName, currentQuestion.question, answer)
-          }
-        />
-      </Stack>
+      <QuizStudentLayout 
+        userName={userName}
+        currentQuestion={currentQuestion}
+      />
     </QuizLayerContainer>
   );
 };

@@ -7,7 +7,6 @@ export const QuizLayerContainer = styled(Box)`
   left: 0;
   position: absolute;
   z-index: 100;
-  background: #153bff47;
   padding: 40px;
   display: flex;
   flex-direction: column;

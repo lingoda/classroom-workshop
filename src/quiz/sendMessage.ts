@@ -19,6 +19,11 @@ export const startNextQuizQuestion = () => {
 
 export const startQuizQuestion = (questionIndex: number) => {
   const questionItem = getQuestionDataByIndex(questionIndex);
+
+  if (!questionItem) {
+    return;
+  }
+
   saveNewQuestion(
     questionItem.text,
     questionItem.answers,

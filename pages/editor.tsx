@@ -14,6 +14,7 @@ import { useTheme } from '@mui/material/styles';
 import { ImageContent } from '@/editor/ImageContent';
 import { Page, PageType, PageContent } from '@/editor/types';
 import { VideoContent } from '@/editor/VideoContent';
+import { QuizContent } from '@/editor/QuizContent';
 
 const Editor = () => {
   const [pages, setPages] = useState<Page[]>([{ type: 'Image', content: null }]);
@@ -74,7 +75,7 @@ const Editor = () => {
                 onClick={handleRemovePage}
                 size="small"
                 sx={{
-                  color: theme.palette.error.main,
+                  color: theme.palette.common.white,
                 }}
               >
                 <DeleteIcon />
@@ -85,7 +86,7 @@ const Editor = () => {
         <Box sx={{ width: '100%', p: 2 }}>
           {currentPageData.type === 'Image' && <ImageContent updatePageContent={updatePageContent} pageContent={currentPageData.content} />}
           {currentPageData.type === 'Video' && <VideoContent updatePageContent={updatePageContent} pageContent={currentPageData.content} />}
-          {currentPageData.type === 'Quiz' && <Typography>Quiz Content</Typography>}
+          {currentPageData.type === 'Quiz' && <QuizContent />}
           {currentPageData.type === 'Poll' && <Typography>Poll Content</Typography>}
         </Box>
       </Grid2>
@@ -142,7 +143,7 @@ const Editor = () => {
             hideNextButton={currentPage === pages.length}
             hidePrevButton={currentPage === 1}
           />
-          {currentPage === pages.length && currentPageData.content !== null ? (
+          {currentPage === pages.length && (currentPageData.content !== null || currentPageData.type === 'Quiz') ? (
               <IconButton onClick={handleAddPage} size="small" sx={{ ml: 1 }}>
                 <Tooltip title="Add Page">
                   <AddIcon />

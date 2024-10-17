@@ -8,11 +8,11 @@ type QuestionItem = {
 
 export const totalQuestionsAmount = mockedQuestions.quiz.length;
 
-export const getQuestionDataByIndex = (index: number): QuestionItem => {
+export const getQuestionDataByIndex = (index: number): QuestionItem | null => {
   const matchedQuestion = mockedQuestions.quiz[index];
 
   if (!matchedQuestion) {
-    throw new Error(`Question with index ${index} not found`);
+    return null;
   }
 
   const correctAnswerItem = Object.entries(matchedQuestion.answers).find(
