@@ -1,20 +1,26 @@
-import { currentQuestionSelector, useQuizStore } from "../store";
-import { QuizLayerContainer } from "./uiBlocks";
-import { useUserPersistentName } from "../hooks";
-import { submitQuestionAnswer } from "../sendMessage";
-import { QuizStudentLayout } from "./QuizStudentLayout";
+import { currentQuestionSelector, useQuizStore } from '../store';
+import { QuizLayerContainer } from './uiBlocks';
+import { useUserPersistentName } from '../hooks';
+import { submitQuestionAnswer } from '../sendMessage';
+import { QuizStudentLayout } from './QuizStudentLayout';
+import { Typography } from '@mui/material';
+import Quiz from '@mui/icons-material/Quiz';
 
 export const QuizStudentLayer = () => {
   const userName = useUserPersistentName();
   const currentQuestion = useQuizStore(currentQuestionSelector);
 
   if (!currentQuestion) {
-    return null;
+    return (
+      <QuizLayerContainer>
+        <Typography>Waiting for the teacher to start the quiz...</Typography>
+      </QuizLayerContainer>
+    );
   }
 
   return (
     <QuizLayerContainer>
-      <QuizStudentLayout 
+      <QuizStudentLayout
         userName={userName}
         currentQuestion={currentQuestion}
       />
