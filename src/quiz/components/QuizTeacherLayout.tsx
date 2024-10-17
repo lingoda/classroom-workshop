@@ -1,22 +1,29 @@
 import { Button } from "@mui/material"
-
 import { Stack } from "@mui/material";
 import { QuestionTitle, UserHeader } from "./uiBlocks";
 import { ResultsGrid } from "./ResultsGrid";
 import { QuestionState } from "../store";
+import { useEffect } from "react";
 
 interface Props {
-    currentQuestion: QuestionState | undefined;
-    currentQuestionIndex: number;
-    questionParticipantsAmount: number;
-    submittedParticipantsAmount: number;
-    startQuizQuestion: (questionIndex: number) => void;
-    editMode?: boolean;
-    userName: string;
-}   
+  currentQuestion: QuestionState | undefined;
+  currentQuestionIndex: number;
+  questionParticipantsAmount: number;
+  submittedParticipantsAmount: number;
+  startQuizQuestion: (questionIndex: number) => void;
+  editMode?: boolean;
+  userName: string;
+}
 
 export const QuizTeacherLayout = ({ currentQuestion, currentQuestionIndex, questionParticipantsAmount, submittedParticipantsAmount, startQuizQuestion, editMode, userName }: Props) => {
-    return <>
+
+  useEffect(() => {
+    if (editMode) {
+      startQuizQuestion(currentQuestionIndex + 1)
+    }
+  }, [])
+
+  return <>
     <UserHeader>Teacher: {userName}</UserHeader>
     {currentQuestion && (
       <Stack spacing={2} width="100%">
@@ -62,6 +69,6 @@ export const QuizTeacherLayout = ({ currentQuestion, currentQuestionIndex, quest
         Start quiz
       </Button>
     )}
-    </>
+  </>
 
 }
