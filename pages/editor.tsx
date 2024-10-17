@@ -110,30 +110,32 @@ const Editor = () => {
           >
             Lesson Editor - Page {currentPage}
           </Typography>
-          {pages.length > 1 && (
-            <Tooltip title="Remove Page">
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            {pages.length > 1 && (
+              <Tooltip title="Remove Page">
+                <IconButton
+                  onClick={handleRemovePage}
+                  size="small"
+                  sx={{
+                    color: theme.palette.common.white,
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Tooltip title="Save Presentation">
               <IconButton
-                onClick={handleRemovePage}
+                onClick={handleSavePresentation}
                 size="small"
                 sx={{
                   color: theme.palette.common.white,
                 }}
               >
-                <DeleteIcon />
+                <SaveIcon />
               </IconButton>
             </Tooltip>
-          )}
-          <Tooltip title="Save Presentation">
-            <IconButton
-              onClick={handleSavePresentation}
-              size="small"
-              sx={{
-                color: theme.palette.common.white,
-              }}
-            >
-              <SaveIcon />
-            </IconButton>
-          </Tooltip>
+          </Box>
         </Box>
         <Box sx={{ width: '100%', p: 2 }}>
           {currentPageData.type === 'Image' && (
